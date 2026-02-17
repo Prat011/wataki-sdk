@@ -305,3 +305,35 @@ export interface BillingUpgradeResponse {
   checkout_url: string | null
   session_id: string
 }
+
+
+export interface StreamOptions {
+  /** Auto-reconnect on disconnect (default: true) */
+  reconnect?: boolean
+  /** Ms between reconnect attempts (default: 3000) */
+  reconnectIntervalMs?: number
+  /** Give up after N attempts (default: 10) */
+  maxReconnectAttempts?: number
+}
+
+export interface StreamEvent<T = unknown> {
+  event: string
+  data: T
+}
+
+export interface MessageReceivedData {
+  instance_id: string
+  message: Message
+}
+
+export interface MessageStatusData {
+  instance_id: string
+  message_id: string
+  status: MessageStatus
+  timestamp: string
+}
+
+export interface ConnectionUpdateData {
+  instance_id: string
+  status: InstanceStatus
+}

@@ -25,10 +25,12 @@ import type {
   BillingUpgradeResponse,
   BillingUsage,
   SignupResponse,
+  StreamOptions,
   Tenant,
   Webhook,
   WebhookList
 } from './types.js'
+import { WatakiStream } from './stream.js'
 
 export interface WatakiClientOptions {
   baseUrl: string
@@ -244,6 +246,22 @@ export class WatakiClient {
 
   getDashboardUrl(): string {
     return `${this.client.defaults.baseURL}/dashboard`
+  }
+
+  /**
+   * Open a WebSocket stream for real-time events on an instance.
+   * No webhook server required — events are pushed directly over the socket.
+   *
+   * ```ts
+   * const stream = client.subscribe(instanceId)
+   * stream.on('message.received', ({ message }) => { ... })
+   * ```
+   */
+  subscribe(instanceId: string, options?: StreamOptions): WatakiStream {
+    const base = this.client.defaults.baseURL!.replace(/^http/, 'ws')
+    const apiKey = this.client.defaults.headers.common['X-API-Key'] as string
+    const url = `${base}/v1/instances/${instanceId}/stream?api_key=${encodeURIComponent(apiKey)}`
+    return new WatakiStream(url, options)
   }
 
   private async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
