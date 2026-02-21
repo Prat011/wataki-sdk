@@ -2,6 +2,115 @@
 
 TypeScript SDK for the [Wataki](https://wataki.cloud) WhatsApp API. Fully typed, ESM-only, zero config.
 
+## AI Agent Examples
+
+Turn any WhatsApp number into an AI coding assistant in under a minute.
+
+All examples read config from a `.env` file. Create one in the project root:
+
+```bash
+# .env
+WATAKI_API_KEY=wk_...
+WATAKI_INSTANCE_ID=        # fill in after first run to skip QR scan
+```
+
+Then run any example with:
+
+```bash
+npx tsx --env-file=.env src/examples/<example>.ts
+```
+
+---
+
+### Claude Code × WhatsApp
+
+Streams responses from [Claude Code](https://claude.ai/code) back to WhatsApp in real-time.
+
+**Prerequisites**
+
+```bash
+npm install -g @anthropic-ai/claude-agent-sdk
+npm install @wataki/wataki-sdk
+```
+
+**`.env`**
+
+```bash
+WATAKI_API_KEY=wk_...
+WATAKI_INSTANCE_ID=        # optional — fill in after first run
+```
+
+**Run**
+
+```bash
+npx tsx --env-file=.env src/examples/claude_code_whatsapp.ts
+```
+
+Scan the QR code that appears with WhatsApp on your phone. Copy the printed instance ID into `WATAKI_INSTANCE_ID` to skip the QR scan on future runs.
+
+---
+
+### OpenCode × WhatsApp
+
+Streams responses from [OpenCode](https://opencode.ai) back to WhatsApp. Supports free models via [OpenCode Zen](https://opencode.ai/zen) — no credit card needed for the free tier.
+
+**Prerequisites**
+
+```bash
+npm install -g opencode-ai
+npm install @wataki/wataki-sdk @opencode-ai/sdk
+```
+
+Get a free API key at [opencode.ai/auth](https://opencode.ai/auth).
+
+**`.env`**
+
+```bash
+WATAKI_API_KEY=wk_...
+WATAKI_INSTANCE_ID=           # optional — fill in after first run
+
+OPENCODE_API_KEY=<key>        # from opencode.ai/auth
+OPENCODE_MODEL=opencode/big-pickle   # see model options below
+```
+
+**Run**
+
+```bash
+npx tsx --env-file=.env src/examples/opencode_whatsapp.ts
+```
+
+**Free models (OpenCode Zen)**
+
+| Model | `OPENCODE_MODEL` value |
+|---|---|
+| Big Pickle *(default)* | `opencode/big-pickle` |
+| GLM 5 | `opencode/glm-5-free` |
+| Kimi K2.5 | `opencode/kimi-k2.5-free` |
+| MiniMax M2.5 | `opencode/minimax-m2.5-free` |
+
+**Other providers** — set the matching API key alongside `OPENCODE_MODEL`:
+
+```bash
+# Anthropic
+OPENCODE_MODEL=anthropic/claude-sonnet-4-6
+ANTHROPIC_API_KEY=sk-ant-...
+
+# OpenAI
+OPENCODE_MODEL=openai/gpt-5
+OPENAI_API_KEY=sk-...
+
+# Groq (free tier)
+OPENCODE_MODEL=groq/llama-3.3-70b-versatile
+GROQ_API_KEY=...
+
+# Ollama (local, no API key)
+OPENCODE_MODEL=ollama/qwen2.5-coder
+```
+
+Set `DEBUG=1` in `.env` to print raw SSE events for troubleshooting.
+
+---
+
 ## Install
 
 ```bash
